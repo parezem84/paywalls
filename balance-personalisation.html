@@ -1,0 +1,353 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balance Personalized Paywalls</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#141414; --ink2:#6B7177; --ink3:#9AA0A6; --line:#DADDE0;
+  --teal:#33C4C9; --teal-dk:#0E6D78; --mint:#DCEFF0; --lav:#E6E3F4; --pink:#FADCD8; --peach:#FCEBDD;
+  --night:#121820; --night2:#1C2530; --page:#ECEEF0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Montserrat,system-ui,sans-serif;background:var(--page);color:var(--ink);padding:40px 16px 80px}
+.wrap{max-width:1400px;margin:0 auto}
+h1{font-size:28px;font-weight:700}
+.sub{color:var(--ink2);font-size:14px;line-height:1.6;max-width:900px;margin:10px 0 30px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px}
+.nav a{font-size:12px;font-weight:700;color:var(--ink);background:#fff;border-radius:20px;padding:7px 13px;text-decoration:none}
+section{margin-bottom:64px}
+.chead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.tag{font-size:12px;font-weight:700;color:#fff;background:var(--ink);border-radius:20px;padding:4px 10px}
+.chead h2{font-size:22px}
+.key{font-size:12px;font-family:ui-monospace,Menlo,monospace;color:var(--teal-dk);background:#fff;border-radius:6px;padding:3px 7px}
+.why{font-size:13.5px;color:var(--ink2);line-height:1.6;max-width:920px;margin-bottom:22px}
+.row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.shot{display:flex;flex-direction:column;align-items:center;gap:10px}
+.cap{font-size:12px;color:var(--ink2);font-weight:600;text-align:center;max-width:290px;line-height:1.45}
+.cap code{font-size:11px;color:var(--teal-dk)}
+
+.phone{width:300px;height:650px;border-radius:44px;background:#111;padding:10px;box-shadow:0 20px 50px rgba(20,20,20,.18)}
+.scr{position:relative;width:100%;height:100%;border-radius:35px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.scr.img{background-size:cover;background-position:top center}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#000;border-radius:14px;z-index:9}
+.status{height:44px;flex:none}
+.body{flex:1;padding:0 20px;display:flex;flex-direction:column;overflow:hidden}
+.foot{padding:8px 18px 22px;flex:none}
+.x{font-size:19px;font-weight:300;line-height:1;margin:4px 0 0 -2px;height:22px}
+.eyebrow{align-self:center;font-size:8.5px;font-weight:700;letter-spacing:.08em;color:var(--teal-dk);background:var(--mint);border-radius:20px;padding:5px 10px;margin-top:6px;text-align:center}
+.h{font-size:24px;font-weight:500;line-height:1.2;text-align:center;letter-spacing:-.01em;margin-top:12px}
+.h b{font-weight:700}
+.p{font-size:11.5px;color:var(--ink2);line-height:1.45;text-align:center;margin-top:8px}
+.proof{display:flex;justify-content:center;align-items:center;gap:20px;margin:16px 0 4px}
+.laurel{display:flex;align-items:center;gap:2px}
+.laurel svg{width:12px;height:32px;color:var(--teal)}
+.laurel div{text-align:center;line-height:1.05}
+.laurel b{font-size:17px;font-weight:700;display:block}
+.laurel span{font-size:9px;font-weight:600}
+.rating{text-align:center}
+.rating b{font-size:10.5px;font-weight:800;display:block}
+.rating i{font-style:normal;color:var(--teal);font-size:14px;letter-spacing:1px}
+.bul{margin:14px 0 0}
+.bul div{display:flex;gap:9px;align-items:flex-start;font-size:11px;line-height:1.4;color:var(--ink);margin-bottom:9px}
+.bul div:before{content:"";flex:none;width:16px;height:16px;border-radius:50%;background:var(--teal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.8-4.8' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;margin-top:-1px}
+.bul div b{font-weight:700}
+.ctl .slot{height:30px;display:flex;align-items:flex-end;justify-content:center}
+.ctl .h{font-size:22px;font-weight:400;margin-top:12px}
+.ctl .p{margin-top:12px}
+.ctl .proof{margin:42px 0 0}
+.car{display:flex;gap:10px;justify-content:center;margin:42px -20px 0}
+.car .rev{flex:none;width:196px;margin:0;padding:16px 14px;display:flex;flex-direction:column;justify-content:center;min-height:110px}
+.car .rev p{font-size:10.5px}
+.rev{background:var(--mint);border-radius:18px;padding:12px 14px;text-align:center;margin-top:12px}
+.rev i{font-style:normal;color:var(--teal);letter-spacing:2px;font-size:13px}
+.rev p{font-size:10.5px;line-height:1.45;margin-top:5px}
+.rev small{display:block;font-size:9px;color:var(--ink2);margin-top:5px}
+.nopay{display:flex;justify-content:center;align-items:center;gap:6px;font-size:10.5px;color:var(--ink2);font-weight:500;margin-bottom:9px}
+.cta{display:block;width:100%;border-radius:12px;background:var(--teal);color:#fff;font:700 15px Montserrat;padding:15px 0;text-align:center}
+.link{font-size:11.5px;text-align:center;text-decoration:underline;margin-top:10px}
+.welcome{align-self:center;white-space:nowrap;display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:5px 11px 5px 6px;margin-top:4px}
+.welcome .dot{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:9px;color:#fff;font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:14px}
+.chip{font-size:10px;font-weight:600;border-radius:12px;padding:8px 10px;background:#F4F6F7;text-align:left;line-height:1.3}
+.chip span{display:block;font-size:8.5px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.plancard{border:2px solid var(--teal-dk);border-radius:16px;overflow:hidden;margin-top:16px}
+.plancard .bar{background:var(--teal-dk);color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-align:center;padding:5px}
+.plancard .in{display:flex;gap:12px;align-items:center;padding:12px}
+.plancard .art{flex:none;width:58px;height:58px;border-radius:12px;background:var(--lav);display:grid;place-items:center}
+.plancard h4{font-size:13.5px}
+.plancard p{font-size:10px;color:var(--ink2);line-height:1.4;margin-top:3px}
+.tl{margin:16px 0 0 4px;position:relative}
+.tl:before{content:"";position:absolute;left:8px;top:8px;bottom:14px;width:2px;background:var(--mint)}
+.tl div{position:relative;padding-left:28px;margin-bottom:12px}
+.tl div:before{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--teal)}
+.tl div.on:before{background:var(--teal)}
+.tl div.bell:before{background:var(--peach);border-color:#E9A06A}
+.tl b{font-size:11px;display:block}
+.tl span{font-size:10px;color:var(--ink2);line-height:1.4}
+.tiles{display:flex;gap:7px;margin-top:16px}
+.tile{flex:1;border-radius:12px;background:var(--night2);padding:10px 8px;text-align:center}
+.tile svg{width:36px;height:36px}
+.tile b{display:block;font-size:10px;margin-top:4px}
+.tile span{font-size:8.5px;color:#93A0AC}
+.reminder{border:1.5px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:500;margin-top:10px}
+.reminder span{color:var(--ink2);font-size:11.5px}
+.reminder.on{border-color:var(--teal-dk);background:#F3FAFA}
+.toggle{width:38px;height:22px;border-radius:11px;background:var(--teal);position:relative;flex:none}
+.toggle:after{content:"";position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff}
+.big .h{font-size:28px}
+.big .p{font-size:14px;color:var(--ink)}
+.big .assure div{display:flex;gap:10px;align-items:center;font-size:13.5px;font-weight:600;padding:11px 0;border-bottom:1px solid #EEF0F1}
+.big .assure div:last-child{border:0}
+.big .assure svg{flex:none;width:24px;height:24px}
+.big .cta{font-size:17px;padding:18px 0}
+.pills{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.pills span{font-size:10px;font-weight:600;border-radius:14px;padding:6px 9px;white-space:nowrap;background:#F4F6F7}
+.offer-h{font-size:22px;font-weight:800;text-align:center;margin-top:10px;letter-spacing:-.01em}
+.offer-box{margin:20px auto 0;width:200px;border:2px solid var(--ink);border-radius:14px;background:var(--mint);text-align:center;padding:16px 8px}
+.offer-box b{font-size:30px;font-weight:800;display:block;letter-spacing:-.02em}
+.offer-box span{font-size:10px;font-weight:600;letter-spacing:.2em}
+.offer-price{text-align:center;font-size:15px;font-weight:700;margin-top:18px}
+.offer-price s{color:var(--ink2);font-weight:500;margin-right:6px}
+.bubble{background:#E6F4F5;border-radius:10px;font-size:10.5px;text-align:center;padding:9px;margin-top:16px}
+.oplan{border:2px solid var(--teal-dk);border-radius:14px;overflow:hidden;margin-top:10px}
+.oplan .bar{background:var(--teal-dk);color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-align:center;padding:5px}
+.oplan .in{display:flex;justify-content:space-between;align-items:center;padding:11px 13px}
+.oplan h4{font-size:14px;font-weight:600}
+.oplan p{font-size:10.5px;color:var(--ink2)}
+.oplan .pr{font-size:14px;font-weight:700}
+.night{background:var(--night)!important;color:#EEF2F5}
+.night .p,.night .nopay{color:#93A0AC}
+.night .rev{background:var(--night2)}
+.night .bul div{color:#EEF2F5}
+.night .rev small{color:#93A0AC}
+.night .link{color:#EEF2F5}
+.night .eyebrow{background:#203A40;color:#7FDDE0}
+.night .laurel svg{color:#7FDDE0}
+.seg{font-size:13px;font-weight:700;margin:26px 0 14px;display:flex;align-items:center;gap:10px}
+.seg:after{content:"";flex:1;height:1px;background:var(--line)}
+.bigopt{border:2px solid var(--line);border-radius:14px;padding:15px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.bigopt b{font-size:15px;font-weight:600}
+.bigopt span{font-size:12.5px;color:var(--ink2)}
+.bigopt.on{border-color:var(--teal-dk);background:#F3FAFA}
+.dchips{display:flex;gap:8px;margin-top:16px}
+.dchips div{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:11px 6px;text-align:center;font-size:12px;font-weight:600}
+.dchips div span{display:block;font-size:10px;color:var(--ink2);font-weight:500;margin-top:2px}
+.dchips div.on{border-color:var(--teal-dk);background:#F3FAFA}
+.push{background:#F1F2F4;border-radius:16px;padding:10px 12px;display:flex;gap:10px;align-items:center;margin-top:18px}
+.push .ic{flex:none;width:30px;height:30px;border-radius:8px;background:var(--teal);display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}
+.push b{font-size:10.5px;display:flex;justify-content:space-between}
+.push b i{font-style:normal;font-weight:500;color:var(--ink3)}
+.push p{font-size:10px;color:var(--ink2);line-height:1.35;margin-top:1px}
+.halfcard{border:2px solid var(--teal-dk);border-radius:18px;text-align:center;padding:18px 14px;margin-top:20px;background:#F3FAFA}
+.halfcard .big1{font-size:34px;font-weight:800;letter-spacing:-.02em}
+.halfcard .big1 small{font-size:15px;font-weight:600}
+.halfcard p{font-size:13px;color:var(--ink2);margin-top:4px}
+.dlabel{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin:0 0 8px}
+.dwrap{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;margin:0 0 26px}
+.dwrap>div{flex:0 1 auto}
+.dtab{border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;font-size:12px;line-height:1.45}
+.dtab th{text-align:left;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+.dtab td{padding:8px 14px;border-bottom:1px solid #EEF0F1;white-space:nowrap}
+.dtab tr:last-child td{border-bottom:0}
+.dtab td.n{text-align:right;font-variant-numeric:tabular-nums}
+.dtab th.n{text-align:right}
+.dtab td.hi{font-weight:700;color:var(--teal-dk)}
+.dtab code{font-size:11px;color:var(--teal-dk)}
+.dnote{font-size:11px;color:var(--ink3);margin-top:6px;max-width:520px;line-height:1.45}
+.srct{width:100%;max-width:1240px;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;margin-top:28px;font-size:12px;line-height:1.5}
+.srct th{text-align:left;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:11px 14px;border-bottom:1px solid var(--line)}
+.srct td{padding:11px 14px;border-bottom:1px solid #EEF0F1;vertical-align:top;color:var(--ink)}
+.srct tr:last-child td{border-bottom:0}
+.srct td:last-child{color:var(--ink2)}
+.srct td.n,.srct th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.srct code{font-size:11px;color:var(--teal-dk)}
+.tnote{font-size:11.5px;color:var(--ink2);margin-top:10px;max-width:1240px;line-height:1.5}
+@media (max-width:900px){.dlabel{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin:0 0 8px}
+.dwrap{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;margin:0 0 26px}
+.dwrap>div{flex:0 1 auto}
+.dtab{border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;font-size:12px;line-height:1.45}
+.dtab th{text-align:left;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+.dtab td{padding:8px 14px;border-bottom:1px solid #EEF0F1;white-space:nowrap}
+.dtab tr:last-child td{border-bottom:0}
+.dtab td.n{text-align:right;font-variant-numeric:tabular-nums}
+.dtab th.n{text-align:right}
+.dtab td.hi{font-weight:700;color:var(--teal-dk)}
+.dtab code{font-size:11px;color:var(--teal-dk)}
+.dnote{font-size:11px;color:var(--ink3);margin-top:6px;max-width:520px;line-height:1.45}
+.srct{display:block;overflow-x:auto}}
+.notes{background:#fff;border-radius:14px;padding:16px 18px;font-size:12.5px;line-height:1.6;color:var(--ink2);max-width:920px;margin-top:22px}
+.notes b{color:var(--ink)}
+.notes ul{padding-left:18px}
+@media (max-width:700px){body{padding:24px 16px 60px}.row{justify-content:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Balance: personalized paywall variants</h1>
+<p class="sub">Mockups for V1–V3, each built on top of the current winner, paywall <b>241857 ("$69.99 Price Test")</b>: the reminder picker, then "7 days for free", the plans sheet and the $34.99 one-time offer. Only the parts driven by user attributes change. Every variant falls back to the control screen when its attribute is missing. Review quotes are real US App Store reviews, shown with their reviewers' App Store names (Tracy is from the current paywall). Check that Balance is happy to use them before shipping.</p>
+<div class="nav"><a href="#control">Control</a><a href="#v1">V1 Goal-matched</a><a href="#v2">V2 Age</a><a href="#v3">V3 Source</a></div>
+
+<!-- CONTROL -->
+<section id="control">
+  <div class="chead"><span class="tag">Control</span><h2>Today's paywall (241857)</h2></div>
+  <p class="why">Rendered by Superwall's preview API. Page 1 is the reminder picker. Page 2 is the trial page, the screen the variants change. Closing it shows the $34.99 one-time offer.</p>
+  <div class="row">
+    <div class="shot"><div class="phone"><div class="scr img" style="background-image:url(control-p0.png)"></div></div><div class="cap">Page 1 · trial reminder picker</div></div>
+    <div class="shot"><div class="phone"><div class="scr img" style="background-image:url(control-p1.png)"></div></div><div class="cap">Trial page: the same for everyone</div></div>
+    <div class="shot"><div class="phone"><div class="scr img" style="background-image:url(control-p2.png)"></div></div><div class="cap">One-time offer: the same for everyone</div></div>
+  </div>
+</section>
+
+<!-- V1 -->
+<section id="v1">
+  <div class="chead"><span class="tag">V1</span><h2>Goal-matched trial page</h2><span class="key">onboarding_goal_1</span></div>
+  <p class="why">Page 1, the reminder picker, stays as it is. On the trial page, the headline names the user's goal (no extra badge) and the review carousel opens on a review about that same goal. Spacing matches the control. Copy changes only, and the exit offer stays as it is, so it's the cheapest goal-based arm.</p>
+    <div class="dwrap">
+    <div><div class="dlabel">Goal mix · <code>onboarding_goal_1</code></div>
+      <table class="dtab"><thead><tr><th>Goal</th><th class="n">Users</th><th class="n">Share</th><th>Trial page</th></tr></thead><tbody>
+        <tr><td>stress</td><td class="n">890</td><td class="n hi">44%</td><td>"Calm your anxious thoughts"</td></tr>
+        <tr><td>sleep</td><td class="n">632</td><td class="n">31%</td><td>"Sleep better, starting tonight"</td></tr>
+        <tr><td>mood</td><td class="n">296</td><td class="n">15%</td><td>"Feel happier, one day at a time"</td></tr>
+        <tr><td>focus</td><td class="n">205</td><td class="n">10%</td><td>"Train a calmer, sharper mind"</td></tr>
+        <tr><td><b>Total</b></td><td class="n"><b>2,023</b></td><td class="n">100%</td><td></td></tr>
+      </tbody></table></div>
+    <div><div class="dlabel">Rollout · installs with a goal</div>
+      <table class="dtab"><thead><tr><th>Install day</th><th class="n">Installs</th><th class="n">With age</th><th class="n">With goal</th></tr></thead><tbody>
+        <tr><td>Nov 2</td><td class="n">1,132</td><td class="n">818</td><td class="n">0</td></tr>
+        <tr><td>Nov 3</td><td class="n">1,242</td><td class="n">834</td><td class="n">367</td></tr>
+        <tr><td>Nov 4</td><td class="n">1,075</td><td class="n">747</td><td class="n hi">691 (64%)</td></tr>
+        <tr><td>Nov 5</td><td class="n">1,080</td><td class="n">746</td><td class="n hi">692 (64%)</td></tr>
+      </tbody></table>
+      <div class="dnote">Since Nov 4, 93% of users who answer the age question also answer the goal question.</div></div>
+  </div>
+  <p class="dnote" style="margin:-16px 0 22px">Superwall user attributes, production, 2026-11-06. These are counts of users, not paywall performance.</p>
+  <div class="row" id="v1row"></div>
+</section>
+
+<!-- V2 (age) -->
+<section id="v2">
+  <div class="chead"><span class="tag">V2</span><h2>Age-tailored</h2><span class="key">age_onboarding</span><span class="key" style="color:#B5482F">live today · ~62K users</span></div>
+  <p class="why">For 55+: bigger type, one plan, three plain reassurances in place of badges, and a review about real human voices. For under-35s: stress and sleep framing, short-session pills and a tighter page. 55+ gets its own reminder page, trial page and exit offer; under-35s keep the control's reminder page. Users aged 35–54 keep the control.</p>
+    <div class="dwrap">
+    <div><div class="dlabel">Segment size · <code>age_onboarding</code></div>
+      <table class="dtab"><thead><tr><th>Age</th><th class="n">Users</th><th class="n">Share</th><th>Paywall</th></tr></thead><tbody>
+        <tr><td>Under 35</td><td class="n">17,607</td><td class="n">28%</td><td>Young variant</td></tr>
+        <tr><td>35–54</td><td class="n">17,862</td><td class="n">29%</td><td>Control</td></tr>
+        <tr><td>55+</td><td class="n">26,551</td><td class="n hi">43%</td><td>55+ variant</td></tr>
+        <tr><td><b>Total</b></td><td class="n"><b>62,020</b></td><td class="n">100%</td><td></td></tr>
+      </tbody></table></div>
+    <div><div class="dlabel">Goal mix by age · <code>onboarding_goal_1</code></div>
+      <table class="dtab"><thead><tr><th>Age</th><th class="n">Stress</th><th class="n">Sleep</th><th class="n">Focus</th><th class="n">Mood</th><th class="n">Users</th></tr></thead><tbody>
+        <tr><td>Under 35</td><td class="n hi">45%</td><td class="n">27%</td><td class="n">16%</td><td class="n">12%</td><td class="n">590</td></tr>
+        <tr><td>35–54</td><td class="n hi">51%</td><td class="n">23%</td><td class="n">9%</td><td class="n">16%</td><td class="n">614</td></tr>
+        <tr><td>55+</td><td class="n">38%</td><td class="n hi">40%</td><td class="n">6%</td><td class="n">15%</td><td class="n">819</td></tr>
+      </tbody></table>
+      <div class="dnote">Under-35s lead with stress, then sleep (72% together). Focus is only 16%, so it's left out of the headline. 55+ lead with sleep.</div></div>
+  </div>
+  <div class="seg">55 and older</div><div class="row" id="v4old"></div><div class="seg">Under 35</div><div class="row" id="v4young"></div>
+</section>
+
+<!-- V3 (source) -->
+<section id="v3">
+  <div class="chead"><span class="tag">V3</span><h2>Source-matched welcome line</h2><span class="key">hdyhau_response</span><span class="key" style="color:#B5482F">live today · ~62K users</span></div>
+  <p class="why">One line above the headline that matches how the user found Balance, and for some sources a review that fits it. Everything else is the control, so it can be added to any other arm. <code>other</code> and <code>not_sure</code> keep the control.</p>
+  <div class="row" id="v5row"></div>
+  <table class="srct">
+    <thead><tr><th>Source</th><th class="n">Users*</th><th class="n">Share</th><th>Line above the headline</th><th>Review in the carousel</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><code>facebook_or_instagram</code> + <code>tiktok</code><br><span style="color:var(--ink3);font-size:11px">23,420 + 1,694</span></td><td class="n">25,114</td><td class="n">40.2%</td><td>🔔 "Reminder 2 days before you're charged" (the day they picked on page 1)</td><td>Control (Tracy)</td><td>They came from an ad and are the most wary of a "free trial" catch. The reminder they just set is the best reassurance.</td></tr>
+      <tr><td><code>app_or_play_store</code></td><td class="n">7,438</td><td class="n">11.9%</td><td>★ "Featured as App of the Day"</td><td>"Balance is the cleanest meditation app I've tried"</td><td>They were browsing the store, so editorial approval and simplicity are what count.</td></tr>
+      <tr><td><code>search_engine</code></td><td class="n">2,523</td><td class="n">4.0%</td><td>✦ "Meditation that adapts to you"</td><td>"It takes into account my mood… to personalize my training"</td><td>They're comparing apps, so lead with what sets Balance apart.</td></tr>
+      <tr><td><code>family_and_friends</code></td><td class="n">5,974</td><td class="n">9.6%</td><td>♥ "Your friends were right · rated 4.9★"</td><td>"I recommend Balance to everyone…"</td><td>Backs up a recommendation they already trust.</td></tr>
+      <tr><td><code>elevate_or_spark</code></td><td class="n">3,730</td><td class="n">6.0%</td><td>"From the makers of Elevate"</td><td>Control</td><td>Borrows trust from an app they already use. Many may already pay for Elevate.</td></tr>
+      <tr><td><code>mobile_game</code></td><td class="n">1,437</td><td class="n">2.3%</td><td>⏱ "Just 3–10 minutes a day"</td><td>"Practice every day, your life will get better…"</td><td>An ad shown inside a game brings the least motivated users. Keep the ask small.</td></tr>
+      <tr><td><code>other</code>, <code>not_sure</code><br><span style="color:var(--ink3);font-size:11px">9,908 + 6,324</span></td><td class="n">16,232</td><td class="n">26.0%</td><td>None (control)</td><td>Control</td><td>No signal to use.</td></tr>
+    </tbody>
+  </table>
+  <p class="tnote">* Of the 62,448 production users with a <code>hdyhau_response</code> attribute (2026-11-06). Check with Balance before shipping: the App of the Day claim, naming Elevate, and, if they share their top ad angles, a Facebook/Instagram line that echoes the ad.</p>
+
+</section>
+
+<div class="notes">
+  <b>Build notes</b>
+  <ul>
+    <li>Since 241857 is an editor paywall, each variant can be a copy of it. Text and visibility are switched on <code>user.onboarding_goal_1</code>, <code>user.age_onboarding</code> and the other attributes, with control copy as the default branch. The alternative is a framework rebuild that reads the same attributes.</li>
+    <li>Variants based on goal and sleep answers need Balance to set those attributes <b>before</b> registering the onboarding placement. Goals are now set for ~64% of new installs (since 2026-11-04).</li>
+    <li>Content names (Wind Down, Back to Sleep, Flow State, Morning Brew, Foundations, Awake in the night) come from the App Store listing and reviews.</li>
+  </ul>
+</div>
+</div>
+
+<script>
+const L='<svg viewBox="0 0 12 32" fill="currentColor"><path d="M9 1C4 7 3 19 10 31c.6 1-.8 1-1.2.2C2 20 2 8 8 .5 8.7-.2 9.6.3 9 1z"/><ellipse cx="5" cy="9" rx="1.6" ry="3" transform="rotate(-30 5 9)"/><ellipse cx="4" cy="16" rx="1.6" ry="3" transform="rotate(-10 4 16)"/><ellipse cx="5" cy="23" rx="1.6" ry="3" transform="rotate(15 5 23)"/></svg>';
+const Lr=L.replace('<svg ','<svg style="transform:scaleX(-1)" ');
+const proof=`<div class="proof"><div class="laurel">${L}<div><b>10M+</b><span>happy users</span></div>${Lr}</div><div class="rating"><b>4.9 STAR RATING</b><i>★★★★★</i></div></div>`;
+const foot=(cta='Start your FREE week',link='View all plans')=>`<div class="foot"><div class="nopay">✓&nbsp; No Payment Due Now</div><div class="cta">${cta}</div><div class="link">${link}</div></div>`;
+const phone=(inner,cls='')=>`<div class="phone"><div class="scr ${cls}"><div class="island"></div><div class="status"></div>${inner}</div></div>`;
+const shot=(p,cap)=>`<div class="shot">${p}<div class="cap">${cap}</div></div>`;
+const rev=(t,s)=>`<div class="rev"><i>★★★★★</i><p>${t}</p><small>${s}</small></div>`;
+
+const side='<div class="rev"><i>★★★★★</i><p>"Been using this app for over 2 years and love it."</p><small>IraSophia</small></div>';
+const car=(t,s)=>`<div class="car">${side}${rev(t,s)}${side}</div>`;
+const TRACY=['"I use it daily and I\'m finally sleeping better… Premium is so worth it!"','Tracy'];
+const ctlPage=(slot,h,r,sub='then $5.75 / month')=>`<div class="body ctl"><div class="x">✕</div><div class="slot">${slot||''}</div><div class="h">${h}</div><div class="p">${sub}<br>($69.99 billed yearly after trial)</div>${proof}${car(...r)}<div style="flex:1"></div></div>${foot()}`;
+/* V1 */
+const goals=[
+ {k:'stress',eb:'FOR YOUR GOAL · LESS STRESS',h:'<b>Calm</b> your<br>anxious thoughts',b:['<b>Foundations</b>: a 10-day plan to understand your mind','<b>Breathing singles</b> for stressful moments','A daily meditation that <b>adapts to how you feel</b>'],r:['"It\'s helped me calm down during panic attacks or when I\'m overwhelmed."','Steffanosaur']},
+ {k:'sleep',eb:'FOR YOUR GOAL · BETTER SLEEP',h:'<b>Sleep better</b>,<br>starting tonight',b:['<b>Wind Down</b>: guided breathing before bed','<b>Sleep singles &amp; sleep sounds</b> for every night','<b>Awake in the night</b> for 3 a.m. wake-ups'],r:['"I love the sleep singles, it takes me hours to fall asleep normally… The sleep singles helped."','Srinijad']},
+ {k:'mood',h:'<b>Feel happier</b>,<br>one day at a time',r:['"It helped improve my sleep, mood, way of thinking, memory."','Danixx210']},
+ {k:'focus',eb:'FOR YOUR GOAL · BETTER FOCUS',h:'Train a calmer,<br><b>sharper mind</b>',b:['<b>Flow State</b> &amp; Concentrate singles for deep work','<b>Morning Brew</b> to start your day clear','10-day Plans that <b>build skill step by step</b>'],r:['"I also use the flow state meditation to tune into focus time at work."','DRai152']},
+];
+let h=shot(`<div class="phone"><div class="scr img" style="background-image:url(control-p0.png)"></div></div>`,'Page 1 · reminder picker, unchanged');
+goals.forEach(g=>{h+=shot(phone(ctlPage('',g.h,g.r,'7 days free, then $5.75 / month')),`Trial page · <code>onboarding_goal_1 = ${g.k}</code>`)});
+document.getElementById('v1row').innerHTML=h;
+
+/* V2 (age) */
+const ck='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#33C4C9"/><path d="M7 12.3l3.2 3.2L17 8.7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const remArt='<svg viewBox="0 0 160 120" width="150" height="112" fill="none" stroke="#141414" stroke-width="1.6"><rect x="52" y="8" width="56" height="100" rx="10" fill="#fff" stroke="#C9C6E6" stroke-width="5"/><rect x="30" y="34" width="100" height="24" rx="5" fill="#DCEFF0"/><path d="M44 50v-5a4 4 0 0 1 8 0v5l2 2H42z" fill="#33C4C9" stroke="none"/><path d="M62 42h40M62 49h52" stroke-width="2.5"/><circle cx="24" cy="80" r="9" fill="#FADCD8" stroke="none"/><circle cx="30" cy="76" r="9"/><path d="M20 112h120"/><rect x="128" y="10" width="12" height="12" transform="rotate(20 134 16)"/></svg>';
+const oldP=[
+ shot(phone(`<div class="body big"><div class="x">✕</div><div style="align-self:center;margin-top:6px">${remArt}</div><div class="h" style="font-size:22px;margin-top:14px"><b>When should we remind you</b> before your free week ends?</div>
+<div class="bigopt"><b>2 days before</b><span>Fri, Oct 24</span></div><div class="bigopt"><b>3 days before</b><span>Thu, Oct 23</span></div>
+<div class="p" style="font-size:12.5px;color:var(--ink2);margin-top:14px">We'll send you a notification. You can cancel anytime in Settings, no phone call needed.</div><div style="flex:1"></div></div>
+<div class="foot big"><div class="cta" style="background:#B8BCC0">Continue</div></div>`),'Reminder page · bigger type, full dates, a plain line on how to cancel; nothing preselected, as in the control'),
+ shot(phone(`<div class="body big"><div class="x">✕</div><div class="h" style="margin-top:14px"><b>Calm mind.<br>Better sleep.</b></div><div class="p" style="margin-top:12px">Free for 7 days, then<br><b>$69.99 a year</b></div>
+<div class="assure" style="margin-top:16px"><div>${ck}No payment today</div><div>${ck}We'll remind you before it ends</div><div>${ck}Cancel anytime in 2 taps</div></div>
+<div class="rev" style="padding:14px"><i>★★★★★</i><p style="font-size:12.5px">"Love that they use real voices and not AI. It's worth paying for."</p><small style="font-size:10.5px">Sgomz</small></div><div style="flex:1"></div></div>
+<div class="foot big"><div class="cta">Start my free week</div><div class="link" style="font-size:12px">Other plans</div></div>`),'Trial page · one plan, three plain reassurances'),
+ shot(phone(`<div class="body big"><div class="x">✕</div><div class="h" style="font-size:16px;font-weight:600;margin-top:18px;color:var(--teal-dk)">Before you go</div><div class="h" style="margin-top:6px"><b>Half price,<br>forever</b></div>
+<div class="halfcard"><div class="big1">$34.99 <small>a year</small></div><p>instead of <s>$69.99</s>, every year</p><p style="color:var(--ink);font-weight:600;margin-top:8px">That's less than $3 a month</p></div>
+<div style="flex:1"></div></div>
+<div class="foot big"><div class="cta">Get half price</div><div class="link" style="font-size:12px;text-decoration:none;color:var(--ink2)">No thanks</div></div>`),'Exit offer · same $34.99 product, discount forever. "Half price" against $69.99 is easier to follow than "71% off"'),
+];
+const youngP=[
+ shot(`<div class="phone"><div class="scr img" style="background-image:url(control-p0.png)"></div></div>`,'Reminder page · same as control'),
+ shot(phone(`<div class="body ctl"><div class="x">✕</div><div class="slot"><div class="welcome"><span class="dot" style="background:var(--teal)">★</span>Join 10M+ people · rated 4.9</div></div><div class="h"><b>Stress less.<br>Sleep better.</b></div><div class="p">7 days free, then $5.75 / month<br>($69.99 billed yearly after trial)</div>
+<div class="pills" style="margin-top:34px;flex-wrap:nowrap;gap:6px"><span>3–10 min</span><span>Personalized</span><span>Human voices</span></div>
+${car('"This app has helped my anxiety more than anything."','Manwelluan')}<div style="flex:1"></div></div>${foot()}`),'Trial page · stress and sleep framing (72% of under-35 goals), control spacing, one row of pills'),
+ shot(phone(`<div class="body"><div class="x">✕</div><div class="offer-h" style="margin-top:14px">ONE-TIME OFFER</div><div class="offer-box"><b>71% OFF</b><span>FOREVER</span></div><div class="offer-price"><s>$121.55</s>$34.99/year</div>
+<div class="p" style="color:var(--ink);font-weight:600;font-size:12.5px">$2.88/mo, less than one coffee a month</div>
+<div class="bubble">This offer won't be there once you close it!</div><div class="oplan"><div class="bar">LOWEST PRICE EVER</div><div class="in"><div><h4>Yearly</h4><p>12 months · $34.99</p></div><div class="pr">$2.88/mo</div></div></div><div style="flex:1"></div></div>
+<div class="foot"><div class="cta">Claim 71% off</div><div class="link" style="text-decoration:none;color:var(--ink2)">No thanks</div></div>`),'Exit offer · keeps the control\'s urgency, adds a per-month comparison and a "No thanks" link'),
+];
+document.getElementById('v4old').innerHTML=oldP.join('');
+document.getElementById('v4young').innerHTML=youngP.join('');
+
+/* V3 (source) */
+const src=[
+ {k:'facebook_or_instagram + tiktok',dot:'#33C4C9',ic:'🔔',t:'Reminder 2 days before you\'re charged',r:TRACY},
+ {k:'app_or_play_store',dot:'#141414',ic:'★',t:'Featured as App of the Day',r:['"Balance is the cleanest meditation app I\'ve tried."','RuralRDN']},
+ {k:'search_engine',dot:'#0E6D78',ic:'✦',t:'Meditation that adapts to you',r:['"It takes into account my mood and how I feel after meditations to personalize my training."','Aditya V.']},
+ {k:'family_and_friends',dot:'#9B8BD8',ic:'♥',t:'Your friends were right · rated 4.9★',r:['"I recommend Balance to everyone because I love it that much."','AlynaW']},
+ {k:'elevate_or_spark',dot:'#F26B5B',ic:'E',t:'From the makers of Elevate',r:TRACY},
+ {k:'mobile_game',dot:'#E9A06A',ic:'⏱',t:'Just 3–10 minutes a day',r:['"Practice everyday, your life will get better and better in every way!"','Mona_21']},
+];
+document.getElementById('v5row').innerHTML=src.map(x=>shot(phone(ctlPage(`<div class="welcome"><span class="dot" style="background:${x.dot}">${x.ic}</span>${x.t}</div>`,'7 days for free',x.r)),`<code>hdyhau_response = ${x.k}</code>`)).join('');
+</script>
+</body>
+</html>
+
+</body></html>
