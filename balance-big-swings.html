@@ -1,0 +1,562 @@
+<meta charset="utf-8">
+<title>Balance Big Swings</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: page chrome follows the viewer's theme; phone screens are fixed light, as in the app. Rows of 300px phones that wrap. */
+:root{
+  --bg:#ECEEF0; --fg:#141414; --fg2:#5F666C; --fg3:#8D949A; --surface:#FFFFFF; --line:#DADDE0; --accent:#0E6D78; --tagbg:#141414; --tagfg:#FFFFFF;
+  /* screen palette (Balance app, light only) */
+  --s-ink:#141414; --s-ink2:#6B7177; --s-ink3:#9AA0A6; --s-line:#DADDE0; --s-bg:#FFFFFF;
+  --teal:#33C4C9; --teal-dk:#0E6D78; --teal-soft:#84CFD3; --mint:#DCEFF0; --lav:#E6E3F4; --lav-dk:#C9C6E6; --pink:#FADCD8; --peach:#FCEBDD; --greycard:#EFF0F1; --cta:#5EC2C7;
+  --font:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#14181B;--fg:#EEF1F3;--fg2:#A3ABB1;--fg3:#7C858C;--surface:#1E2428;--line:#2E363B;--accent:#7FDDE0;--tagbg:#EEF1F3;--tagfg:#14181B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14181B;--fg:#EEF1F3;--fg2:#A3ABB1;--fg3:#7C858C;--surface:#1E2428;--line:#2E363B;--accent:#7FDDE0;--tagbg:#EEF1F3;--tagfg:#14181B;color-scheme:dark}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--fg);padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1400px;margin:0 auto}
+h1{font-size:28px;font-weight:700;text-wrap:balance}
+.sub{color:var(--fg2);font-size:14px;line-height:1.6;max-width:900px;margin:10px 0 24px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px}
+.nav a{font-size:12px;font-weight:700;color:var(--fg);background:var(--surface);border-radius:20px;padding:7px 13px;text-decoration:none}
+.nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section{margin-bottom:72px}
+.chead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.tag{font-size:12px;font-weight:700;color:var(--tagfg);background:var(--tagbg);border-radius:20px;padding:4px 10px}
+.chead h2{font-size:22px}
+.key{font-size:12px;font-family:ui-monospace,Menlo,monospace;color:var(--accent);background:var(--surface);border-radius:6px;padding:3px 7px}
+.why{font-size:13.5px;color:var(--fg2);line-height:1.6;max-width:920px;margin-bottom:6px}
+.seg{font-size:13px;font-weight:700;margin:26px 0 16px;display:flex;align-items:center;gap:10px}
+.seg:after{content:"";flex:1;height:1px;background:var(--line)}
+.row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.shot{display:flex;flex-direction:column;align-items:center;gap:10px}
+.cap{font-size:12px;color:var(--fg2);font-weight:600;text-align:center;max-width:290px;line-height:1.45}
+.cap code,.why code,.notes code{font-size:11px;color:var(--accent)}
+.notes{background:var(--surface);border-radius:14px;padding:16px 18px;font-size:12.5px;line-height:1.6;color:var(--fg2);max-width:920px;margin-top:26px}
+.notes b{color:var(--fg)}
+.notes ul{padding-left:18px;display:grid;gap:4px}
+
+/* phone */
+.phone{width:300px;height:650px;border-radius:44px;background:#111;padding:10px;box-shadow:0 20px 50px rgba(20,20,20,.18);flex:none}
+.scr{position:relative;width:100%;height:100%;border-radius:35px;overflow:hidden;background:var(--s-bg);color:var(--s-ink);display:flex;flex-direction:column}
+.scr.img{background-size:cover;background-position:top center}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:84px;height:24px;background:#000;border-radius:14px;z-index:9}
+.status{height:44px;flex:none}
+.body{flex:1;padding:0 20px;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.foot{padding:8px 18px 22px;flex:none}
+.x{font-size:19px;font-weight:300;line-height:1;margin:2px 0 0 -2px;height:22px;color:var(--s-ink)}
+.h{font-size:22px;font-weight:500;line-height:1.2;text-align:center;letter-spacing:-.01em;text-wrap:balance}
+.h b{font-weight:700}
+.p{font-size:11.5px;color:var(--s-ink2);line-height:1.45;text-align:center}
+.cta{display:block;width:100%;border-radius:12px;background:var(--teal);color:#fff;font:700 15px var(--font);padding:15px 0;text-align:center;border:0}
+.link{font-size:11.5px;text-align:center;text-decoration:underline;margin-top:10px;color:var(--s-ink)}
+.nopay{display:flex;justify-content:center;align-items:center;gap:6px;font-size:10.5px;color:var(--s-ink2);font-weight:500;margin-bottom:9px;min-height:14px}
+.rev{background:var(--mint);border-radius:16px;padding:12px 14px;text-align:center}
+.rev i{font-style:normal;color:var(--teal);letter-spacing:2px;font-size:12px}
+.rev p{font-size:10.5px;line-height:1.45;margin-top:4px}
+.rev small{display:block;font-size:9px;color:var(--s-ink2);margin-top:4px}
+
+/* A · page 1 intro (before/after) */
+.ba{position:relative;height:178px;margin-top:6px;flex:none}
+.bc,.ac{position:absolute;border-radius:14px;padding:10px 11px;display:flex;flex-direction:column}
+.bc{left:4px;top:18px;width:118px;height:142px;background:var(--greycard);color:#8B9095}
+.ac{right:4px;top:0;width:132px;height:178px;background:var(--teal-soft);color:#fff;box-shadow:0 6px 18px rgba(14,109,120,.18)}
+.bc small,.ac small{font-size:8px;font-weight:500;line-height:1.2}
+.bc>b,.ac>b{font-size:10.5px;font-weight:700;line-height:1.15}
+.bc em,.ac em{font-style:normal;font-size:7px;margin-top:9px;opacity:.85}
+.bc strong{font-size:12px;line-height:1.15;font-weight:700;margin-top:1px}
+.ac strong{font-size:15px;line-height:1.15;font-weight:700;margin-top:1px}
+.bc svg,.ac svg{margin-top:auto;width:100%;height:auto;display:block}
+.ac svg{margin:auto -11px -10px;width:calc(100% + 22px)}
+.introh{font-size:18.5px;font-weight:700;line-height:1.22;text-align:center;margin-top:20px;letter-spacing:-.01em;text-wrap:balance}
+.bens{display:grid;gap:6px;margin-top:30px}
+.ben{display:flex;align-items:center;gap:12px;font-size:12px;line-height:1.35}
+.ben svg{flex:none;width:38px;height:38px}
+.rate{text-align:center;margin-top:auto;padding-top:10px}
+.rate i{font-style:normal;color:var(--teal-soft);font-size:17px;letter-spacing:1px}
+.rate b{display:block;font-size:12px;margin-top:2px}
+.rate span{display:block;font-size:10.5px;color:var(--s-ink);margin-top:3px}
+.cta.soft{background:var(--cta);border-radius:8px}
+
+/* A · page 3 design your trial */
+.dh{font-size:23px;font-weight:500;line-height:1.18;text-align:center;margin-top:6px;letter-spacing:-.01em}
+.dh b{font-weight:700}
+.opts{display:grid;gap:9px;margin-top:14px}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:inherit;border:2px solid var(--s-line);border-radius:16px;padding:12px 13px;background:#fff;cursor:pointer}
+.opt:focus-visible{outline:2px solid var(--teal-dk);outline-offset:2px}
+.opt.on{border-color:var(--teal-dk);background:#F3FAFA}
+.opt .t{display:flex;align-items:center;gap:9px}
+.radio{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--s-line);display:grid;place-items:center}
+.opt.on .radio{border-color:var(--teal-dk)}
+.opt.on .radio:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--teal-dk)}
+.opt h4{font-size:14px;font-weight:700}
+.opt .pr{margin-left:auto;font-size:13px;font-weight:700;white-space:nowrap}
+.opt p{font-size:10px;color:var(--s-ink2);line-height:1.4;margin:5px 0 0 27px}
+.days{display:grid;grid-template-columns:repeat(30,1fr);gap:1.5px;margin:9px 0 0 27px}
+.days i{height:6px;border-radius:2px;background:#E7EAEC}
+.days i.f{background:var(--teal)}
+.days i.r{background:#E9A06A}
+.dlegend{display:flex;justify-content:space-between;font-size:8.5px;color:var(--s-ink3);margin:4px 0 0 27px;font-weight:600}
+
+/* B · animated */
+.scene{position:relative;height:250px;margin:4px -6px 0;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,#CDEEEF 0%,#9AD8DB 100%);flex:none}
+.scene .sky{position:absolute;inset:0;background:linear-gradient(180deg,#B9BEC3 0%,#D3D7DA 100%);animation:skyfade 8s ease-in-out infinite;opacity:0}
+.scene .sun{position:absolute;left:50%;bottom:52px;width:84px;height:84px;margin-left:-42px;border-radius:50%;background:#fff;box-shadow:0 0 0 14px rgba(255,255,255,.28),0 0 0 30px rgba(255,255,255,.14);animation:sunrise 8s ease-in-out infinite}
+.scene .hill{position:absolute;left:-20%;right:-20%;bottom:-120px;height:190px;border-radius:50%;background:#fff}
+.scene .cloud{position:absolute;top:58px;width:92px;height:34px;background:#8E949A;border-radius:20px}
+.scene .cloud:before,.scene .cloud:after{content:"";position:absolute;background:inherit;border-radius:50%}
+.scene .cloud:before{width:42px;height:42px;left:14px;top:-20px}
+.scene .cloud:after{width:34px;height:34px;left:44px;top:-13px}
+.scene .cloud{opacity:0}
+.scene .rain,.scene .l1{opacity:0}
+.scene .c1{left:40px;animation:cloudL 8s ease-in-out infinite}
+.scene .c2{left:130px;top:84px;transform:scale(.8);animation:cloudR 8s ease-in-out infinite}
+.scene .rain{position:absolute;left:55px;top:100px;width:150px;height:60px;background:repeating-linear-gradient(105deg,transparent 0 10px,rgba(120,126,132,.55) 10px 11.5px);animation:rain 8s ease-in-out infinite}
+.scene .lbl{position:absolute;left:14px;top:14px;font-size:9.5px;font-weight:700;letter-spacing:.06em;border-radius:20px;padding:5px 10px;background:rgba(255,255,255,.85);color:var(--teal-dk)}
+.scene .l1{color:#5C6268;animation:lblA 8s ease-in-out infinite}
+.scene .l2{animation:lblB 8s ease-in-out infinite}
+@keyframes sunrise{0%,8%{transform:translateY(90px)}45%,90%{transform:translateY(0)}100%{transform:translateY(90px)}}
+@keyframes cloudL{0%,8%{transform:translateX(0);opacity:1}45%,90%{transform:translateX(-170px);opacity:0}100%{transform:translateX(0);opacity:1}}
+@keyframes cloudR{0%,8%{transform:scale(.8) translateX(0);opacity:1}45%,90%{transform:scale(.8) translateX(190px);opacity:0}100%{transform:scale(.8) translateX(0);opacity:1}}
+@keyframes rain{0%,8%{opacity:1}30%,90%{opacity:0}100%{opacity:1}}
+@keyframes skyfade{0%,8%{opacity:1}45%,90%{opacity:0}100%{opacity:1}}
+@keyframes lblA{0%,20%{opacity:1}30%,92%{opacity:0}100%{opacity:1}}
+@keyframes lblB{0%,25%{opacity:0}38%,90%{opacity:1}100%{opacity:0}}
+.proof{display:flex;justify-content:center;align-items:center;gap:20px}
+.laurel{display:flex;align-items:center;gap:2px}
+.laurel svg{width:12px;height:32px;color:var(--teal)}
+.laurel div{text-align:center;line-height:1.05}
+.laurel b{font-size:17px;font-weight:700;display:block}
+.laurel span{font-size:9px;font-weight:600}
+.rating{text-align:center}
+.rating b{font-size:10.5px;font-weight:800;display:block}
+.rating i{font-style:normal;color:var(--teal);font-size:14px;letter-spacing:1px}
+
+.rem{position:relative;height:178px;margin-top:6px;flex:none}
+.rem .ph{position:absolute;left:50%;top:6px;width:84px;height:150px;margin-left:-42px;border:5px solid var(--lav-dk);border-radius:16px;background:#fff}
+.rem .ph:before{content:"";position:absolute;left:50%;top:6px;width:22px;height:5px;margin-left:-11px;border-radius:3px;background:var(--lav-dk)}
+.rem .nt{position:absolute;left:50%;top:44px;width:170px;margin-left:-85px;background:var(--mint);border-radius:12px;padding:8px 10px;display:flex;gap:8px;align-items:center;box-shadow:0 8px 18px rgba(14,109,120,.16);animation:drop 6s cubic-bezier(.2,.9,.3,1.2) infinite}
+.rem .nt .bell{flex:none;width:26px;height:26px;border-radius:8px;background:var(--teal);display:grid;place-items:center;animation:ring 6s ease-in-out infinite;transform-origin:50% 20%}
+.rem .nt b{display:block;font-size:9px;font-weight:700}
+.rem .nt span{display:block;font-size:8px;color:var(--s-ink2);line-height:1.3}
+.rem .dot{position:absolute;border-radius:50%}
+.rem .d1{left:34px;top:120px;width:18px;height:18px;background:var(--pink)}
+.rem .d2{right:40px;top:24px;width:10px;height:10px;border:1.5px solid var(--s-ink)}
+.rem .ground{position:absolute;left:20px;right:20px;bottom:10px;height:1.5px;background:var(--s-ink)}
+@keyframes drop{0%,6%{transform:translateY(-36px);opacity:0}16%,88%{transform:translateY(0);opacity:1}96%,100%{transform:translateY(-36px);opacity:0}}
+@keyframes ring{0%,18%{transform:rotate(0)}21%{transform:rotate(16deg)}24%{transform:rotate(-14deg)}27%{transform:rotate(10deg)}30%{transform:rotate(-6deg)}33%,100%{transform:rotate(0)}}
+.bigopt{border:2px solid var(--s-line);border-radius:12px;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:500;margin-top:10px}
+.bigopt span{color:var(--s-ink2);font-size:11.5px}
+
+.tline{position:relative;margin:16px 6px 0;height:74px;flex:none}
+.tline .track{position:absolute;left:14px;right:14px;top:14px;height:4px;border-radius:2px;background:#E7EAEC}
+.tline .fill{position:absolute;left:14px;top:14px;height:4px;border-radius:2px;background:var(--teal);width:calc(100% - 28px);transform-origin:left;animation:fill 7s ease-in-out infinite}
+.tline .node{position:absolute;top:0;width:32px;height:32px;margin-left:-16px;border-radius:50%;display:grid;place-items:center;background:#fff;border:2px solid var(--teal)}
+.tline .node svg{width:15px;height:15px}
+.tline .n1{left:14px;background:var(--teal)}
+.tline .n2{left:calc(14px + (100% - 28px)*5/7);border-color:#E9A06A;background:var(--peach);animation:pop 7s ease-in-out infinite}
+.tline .n3{left:calc(100% - 14px)}
+.tline .nl{position:absolute;top:38px;width:90px;margin-left:-45px;text-align:center;font-size:8.5px;line-height:1.3;color:var(--s-ink2)}
+.tline .nl b{display:block;font-size:9.5px;color:var(--s-ink)}
+.tline .nl.l1{left:0;margin-left:0;width:70px;text-align:left}
+.tline .nl.l2{left:calc(14px + (100% - 28px)*5/7);width:56px;margin-left:-28px}
+.tline .nl.l3{left:auto;right:0;margin-left:0;width:46px;text-align:right}
+@keyframes fill{0%,6%{transform:scaleX(0)}55%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes pop{0%,38%{transform:scale(1)}44%{transform:scale(1.22)}50%,100%{transform:scale(1)}}
+.plan{display:block;width:100%;text-align:left;font:inherit;color:inherit;border:2px solid var(--s-line);border-radius:14px;overflow:hidden;background:#fff;cursor:pointer;margin-top:10px}
+.plan:focus-visible{outline:2px solid var(--teal-dk);outline-offset:2px}
+.plan .bar{background:#E7EAEC;color:var(--s-ink2);font-size:8.5px;font-weight:700;letter-spacing:.08em;text-align:center;padding:5px}
+.plan.on{border-color:var(--teal-dk)}
+.plan.on .bar{background:var(--teal-dk);color:#fff}
+.plan .in{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 13px}
+.plan h4{font-size:14px;font-weight:700}
+.plan p{font-size:10px;color:var(--s-ink2);margin-top:2px}
+.plan .pr{font-size:15px;font-weight:700;white-space:nowrap}
+.plan .pr small{font-size:10px;font-weight:600;color:var(--s-ink2)}
+.plan.sm .in{padding:10px 13px}
+.plan.sm h4{font-size:13px}
+
+
+/* A page 1: subtle before/after motion */
+.bc{animation:bcOut 7s ease-in-out infinite;z-index:0}
+.ac{animation:acIn 7s ease-in-out infinite;z-index:1}
+@keyframes bcOut{0%,14%{transform:translateX(57px) scale(1.12);opacity:1;z-index:2}38%,90%{transform:none;opacity:.55;z-index:0}100%{transform:translateX(57px) scale(1.12);opacity:1;z-index:2}}
+@keyframes acIn{0%,18%{transform:translateX(40px) scale(.85);opacity:0}40%,88%{transform:none;opacity:1}96%,100%{transform:translateX(40px) scale(.85);opacity:0}}
+.ba .drops{animation:drops 1.4s linear infinite}
+.ba .rise{transform-box:fill-box;animation:rise 5s ease-in-out infinite alternate}
+.ba .rays{animation:glow 5s ease-in-out infinite alternate}
+.ba .tw{animation:tw 2.4s ease-in-out infinite alternate}
+.ba .wig{stroke-dasharray:6 4;animation:wig 3s linear infinite}
+.ba .drift{animation:drift 4s ease-in-out infinite alternate}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+@keyframes drops{from{transform:translateY(-3px);opacity:.3}50%{opacity:1}to{transform:translateY(4px);opacity:.2}}
+@keyframes rise{from{transform:translateY(5px)}to{transform:translateY(0)}}
+@keyframes glow{from{opacity:.45}to{opacity:1}}
+@keyframes tw{from{opacity:.35}to{opacity:1}}
+@keyframes wig{to{stroke-dashoffset:-20}}
+@keyframes drift{from{transform:translateX(-3px)}to{transform:translateX(4px)}}
+.scene:not(.calm) *{animation-delay:-4s!important}
+.tline .fill,.tline .n2{animation-delay:-4.2s!important}
+.rem .nt,.rem .bell{animation-delay:-2.2s!important}
+
+/* B page 3 visual: calm hero + auto carousel */
+.scene.calm{height:190px;margin-top:0}
+.scene.calm .sky,.scene.calm .rain,.scene.calm .cloud,.scene.calm .l1{display:none}
+.scene.calm .sun{bottom:34px;width:64px;height:64px;margin-left:-32px;animation:breathe 4s ease-in-out infinite alternate!important;animation-delay:0s!important}
+.scene.calm .hill{bottom:-140px}
+.scene.calm .l2{opacity:1;animation:none!important}
+@keyframes breathe{from{box-shadow:0 0 0 8px rgba(255,255,255,.25),0 0 0 18px rgba(255,255,255,.12)}to{box-shadow:0 0 0 16px rgba(255,255,255,.3),0 0 0 32px rgba(255,255,255,.14)}}
+.vh{font-size:22px;font-weight:400;text-align:center;margin-top:14px;letter-spacing:-.01em}
+.vp{font-size:11.5px;color:var(--s-ink2);line-height:1.45;text-align:center;margin-top:6px}
+.cv{margin:14px -20px 0;overflow:hidden}
+.ctrack{display:flex;gap:10px;animation:slide 15s ease-in-out infinite}
+.ctrack .rev{flex:none;width:196px;min-height:96px;display:flex;flex-direction:column;justify-content:center;padding:12px 14px}
+@keyframes slide{0%,16%{transform:translateX(42px)}20%,36%{transform:translateX(-164px)}40%,56%{transform:translateX(-370px)}60%,76%{transform:translateX(-576px)}80%,100%{transform:translateX(-782px)}}
+
+.scene.night3{background:linear-gradient(180deg,#1E4E5C 0%,#3E8C99 100%)}
+.night3 .moon{position:absolute;left:50%;bottom:52px;width:56px;height:56px;margin-left:-28px;border-radius:50%;box-shadow:14px -6px 0 0 #fff;animation:moonup 6s ease-in-out infinite alternate}
+.night3 .st{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;animation:tw 1.8s ease-in-out infinite alternate}
+.night3 .s1{left:40px;top:40px}.night3 .s2{left:200px;top:30px;animation-delay:.6s}.night3 .s3{left:170px;top:70px;width:3px;height:3px;animation-delay:1.1s}.night3 .s4{left:70px;top:82px;width:3px;height:3px;animation-delay:.3s}
+.night3 .hill{background:#DCEFF0}
+.night3 .lbl{background:rgba(255,255,255,.18);color:#fff}
+@keyframes moonup{from{transform:translateY(14px)}to{transform:translateY(-4px)}}
+.glow3 .rays3{position:absolute;left:50%;bottom:-30px;width:260px;height:260px;margin-left:-130px;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.28) 0 6deg,transparent 6deg 20deg);animation:spin 24s linear infinite}
+.glow3 .ht{position:absolute;bottom:40px;color:#fff;font-size:14px;opacity:0;animation:floatup 4.5s ease-out infinite}
+.glow3 .h1{left:62px}.glow3 .h2{left:190px;animation-delay:1.5s;font-size:11px}.glow3 .h3{left:120px;animation-delay:3s;font-size:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes floatup{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-90px);opacity:0}}
+
+.scene.calm.p3hero{height:350px;margin:-44px 0 0;border-radius:0 0 32px 32px}
+.scene.calm.p3hero .x{position:absolute;left:20px;top:52px;z-index:3;margin:0}
+.scene.calm.p3hero .sh{position:absolute;left:16px;right:16px;top:96px;z-index:3;text-align:center;font-size:27px;line-height:1.18;font-weight:500;color:var(--s-ink);letter-spacing:-.01em;text-wrap:balance}
+.scene.calm.p3hero .sh b{font-weight:700}
+.scene.calm.p3hero.night3 .sh,.scene.calm.p3hero.night3 .x{color:#fff}
+.scene.calm.p3hero .sun{bottom:84px}
+.scene.calm.p3hero .hill{bottom:-150px;height:210px}
+.scene.calm.p3hero.night3 .moon{bottom:78px}
+.scene.calm.p3hero.night3 .s1{left:36px;top:200px}.scene.calm.p3hero.night3 .s2{left:228px;top:186px}.scene.calm.p3hero.night3 .s3{left:196px;top:244px}.scene.calm.p3hero.night3 .s4{left:64px;top:252px}
+.scene.calm.p3hero.glow3 .rays3{bottom:-70px;width:340px;height:340px;margin-left:-170px}
+.scene.calm.p3hero.glow3 .ht{bottom:70px}
+
+/* review on the hill */
+.scene.calm.p3hero{height:486px}
+.scene.calm.p3hero .hill{bottom:-40px;height:230px}
+.scene.calm.p3hero .sun{bottom:196px}
+.scene.calm.p3hero.night3 .moon{bottom:200px}
+.scene.calm.p3hero.night3 .s1{left:36px;top:200px}.scene.calm.p3hero.night3 .s2{left:228px;top:186px}.scene.calm.p3hero.night3 .s3{left:206px;top:262px}.scene.calm.p3hero.night3 .s4{left:54px;top:270px}
+.scene.calm.p3hero.glow3 .rays3{bottom:66px}
+.scene.calm.p3hero.glow3 .ht{bottom:170px}
+.scene.calm.p3hero .hrev{position:absolute;left:18px;right:18px;bottom:50px;z-index:3;padding:15px 16px;box-shadow:0 6px 20px rgba(14,109,120,.10)}
+.scene.calm.p3hero .hrev p{font-size:11.5px}
+.scene.calm.p3hero .hrev small{font-size:9.5px}
+.scene.calm.p3hero .hrev{background:transparent;box-shadow:none}
+.scr.sleepbg{background:#DCEFF0}
+.scr.sleepbg .scene.calm.p3hero{border-radius:0}
+
+
+/* B exit offer: calm reveal */
+.xo-plan{border:2px solid var(--teal-dk);border-radius:14px;overflow:hidden}
+.xo-plan .bar{background:var(--teal-dk);color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-align:center;padding:5px}
+.xo-plan .in{display:flex;justify-content:space-between;align-items:center;padding:11px 13px}
+.xo-plan h4{font-size:14px;font-weight:600}
+.xo-plan p{font-size:10.5px;color:var(--s-ink2)}
+.xo-plan .pr{font-size:14px;font-weight:700}
+
+.scene.calm.p3hero.xo2{height:420px}
+.xo2-sun{position:absolute;left:50%;top:172px;width:176px;height:176px;margin-left:-88px;border-radius:50%;background:rgba(255,255,255,.75);animation:breathe 5s ease-in-out infinite alternate}
+.scene.calm.p3hero.xo2 .hill{bottom:-150px;height:210px}
+.xo2-stack{position:absolute;left:0;right:0;top:196px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.xo2-pill{font-size:10px;font-weight:700;letter-spacing:.12em;color:#fff;background:var(--teal-dk);border-radius:20px;padding:6px 12px;animation:xo2pill 9s ease-in-out infinite}
+.xo2-old{position:relative;font-size:16px;font-weight:500;color:var(--s-ink2);margin-top:6px;animation:xo2old 9s ease-in-out infinite}
+.xo2-old:after{content:"";position:absolute;left:-3px;right:-3px;top:52%;height:1.5px;background:var(--s-ink2);transform-origin:left;animation:xo2strike 9s ease-in-out infinite}
+.xo2-new{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1;color:var(--s-ink);animation:xo2new 9s ease-in-out infinite}
+.xo2-new small{font-size:14px;font-weight:600;color:var(--s-ink2)}
+.xo2-note{font-size:10.5px;color:var(--s-ink2);text-align:center;margin-bottom:8px}
+@keyframes xo2old{0%,6%{opacity:0;transform:translateY(6px)}18%,92%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes xo2strike{0%,22%{transform:scaleX(0)}38%,100%{transform:scaleX(1)}}
+@keyframes xo2new{0%,38%{opacity:0;transform:translateY(12px)}54%,92%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes xo2pill{0%,54%{opacity:0;transform:scale(.92)}66%,92%{opacity:1;transform:none}100%{opacity:0}}
+.rq{font-size:24px;font-weight:500;line-height:1.18;text-align:center;letter-spacing:-.01em;margin-top:16px;text-wrap:balance}
+.rq b{font-weight:700}
+.rem.static *{animation:none!important}
+/* one headline size everywhere */
+.introh,.dh,.rq,.hd,.scene.calm.p3hero .sh{font-size:24px!important;font-weight:500!important;line-height:1.18!important;letter-spacing:-.01em}
+.introh b,.dh b,.rq b,.hd b,.scene.calm.p3hero .sh b{font-weight:700}
+
+/* C */
+.c-ans{display:grid;gap:12px}
+.c-a{display:flex;align-items:center;gap:12px;border:1.5px solid var(--s-line);border-radius:14px;padding:14px 14px;font-size:12.5px;line-height:1.35;animation:cin .7s ease-out both}
+.c-a svg{flex:none;width:34px;height:34px}
+.c-a b{font-weight:700}
+.c-built{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:26px;white-space:nowrap;font-size:12px;font-weight:600;color:var(--teal-dk);animation:cin .7s ease-out both}
+.c-ok{width:20px;height:20px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font-size:11px}
+@keyframes cin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.c-week{display:flex;flex-direction:column;margin-top:20px}
+.c-day{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid #EEF0F1}
+.c-day:last-child{border-bottom:0}
+.c-ic{width:28px;height:28px;border-radius:50%;background:#F1F4F5;color:var(--teal-dk);display:grid;place-items:center}
+.c-ic svg{width:15px;height:15px}
+.c-day.now .c-ic{background:var(--teal);color:#fff}
+.c-day small{display:block;font-size:9px;font-weight:600;color:var(--s-ink3);letter-spacing:.02em}
+.c-day.now small{color:var(--teal-dk)}
+.c-day b{display:block;font-size:11.5px;font-weight:600;line-height:1.25}
+.c-day i{white-space:nowrap;font-style:normal;font-size:9.5px;color:var(--s-ink3)}
+.c-note{display:inline-block;white-space:nowrap;font-style:normal;font-size:9.5px;font-weight:600;color:#9A5A25;background:var(--peach);border-radius:8px;padding:3px 7px;margin-top:4px}
+.c-note.end{color:var(--teal-dk);background:var(--mint)}
+.c-plan{display:flex;align-items:center;gap:14px;margin-top:22px;background:var(--mint);border-radius:18px;padding:16px}
+.c-ring{position:relative;flex:none;width:64px;height:64px}
+.c-ring svg{width:100%;height:100%}
+.c-ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:var(--teal-dk)}
+.c-arc{animation:carc 2.2s ease-out both}
+@keyframes carc{from{stroke-dashoffset:170}to{stroke-dashoffset:146}}
+.c-plan small{font-size:8.5px;font-weight:700;letter-spacing:.1em;color:var(--teal-dk)}
+.c-plan h4{font-size:17px;font-weight:700;margin-top:2px}
+.c-plan p{font-size:10px;color:var(--s-ink2);margin-top:3px;line-height:1.35}
+.c-plan .c-ready{color:var(--teal-dk);font-weight:700}
+@media (prefers-reduced-motion: reduce){*,*:before,*:after{animation:none!important}}
+@media (max-width:700px){.row{justify-content:center}}
+@media print{.phone{box-shadow:none;outline:1px solid #C9CDD1}}
+</style>
+
+<div class="wrap">
+<h1>Balance: big-swing paywall concepts</h1>
+<p class="sub">Three bigger bets against the current winner, paywall <b>241857</b>, all in its visual language (teal and mint, soft line illustrations). Review quotes are real US App Store reviews, shown with their reviewers' App Store names. The phones are clickable: tap a trial option, a plan or a reminder choice to see the screen respond.</p>
+<div class="nav"><a href="#a">A · Design your trial</a><a href="#b">B · More visual</a><a href="#c">C · Your program is ready</a></div>
+
+<section id="a">
+  <div class="chead"><span class="tag">A</span><h2>Design your trial</h2><span class="key">onboarding_goal_1</span></div>
+  <p class="why">Page 1 sells the outcome of the goal the user picked in onboarding as a before-and-after, based on Balance's existing intro screen. Page 2 is the control's reminder picker. Page 3 lets the user choose how they start: a free week, or a paid month for people who want more time before the $69.99 charge.</p>
+  <div class="seg">Page 1 · intro, one version per goal (animated: "Before" starts centered, then fades back as "After" slides in)</div>
+  <div class="row" id="aIntro"></div>
+  <div class="seg">Page 2 · reminder (unchanged) and page 3 · design your trial</div>
+  <div class="row" id="aRest"></div>
+  <div class="seg">Exit offer · same as control</div>
+  <div class="row" id="aExit"></div>
+  <div class="notes"><b>To build it</b><ul>
+    <li>Page 1 switches on <code>user.onboarding_goal_1</code>. Users who picked focus (10% of goal answers) or gave no answer see the generic version (Balance's current screen: "Start a free week that's built around how you feel").</li>
+    <li>The 30-day option needs a new annual product with a one-month pay-up-front introductory offer. An App Store product carries one intro offer at a time, and the current annual product already uses its offer for the 7-day trial. <b>$4.99 is a placeholder price.</b></li>
+    <li>No "View all plans" link: the page offers only the two trial options. Closing still shows the control's exit offer.</li>
+  </ul></div>
+</section>
+
+<section id="b">
+  <div class="chead"><span class="tag">B</span><h2>More visual</h2><span class="key">onboarding_goal_1 on page 3</span></div>
+  <p class="why">The same three-page story, told with motion. Page 1 animates the shift from a grey, rainy morning to a calm, sunny one. Page 2 is the control's reminder choice with a notification that drops in and rings. Page 3 keeps the control's offer (yearly with the 7-day trial upfront, monthly under "View all plans") but is personalized on <code>onboarding_goal_1</code>: an animated mood image, a headline and one review that match the goal. The ratings, laurels and "No Payment Due Now" line are gone, and the price sits right above the button.</p>
+  <div class="seg">Pages 1–2 · animations loop every 6–8 seconds</div>
+  <div class="row" id="bRow"></div>
+  <div class="seg">Page 3 · personalized per goal</div>
+  <div class="row" id="bRow3"></div>
+  <div class="seg">Exit offer</div>
+  <div class="row" id="bRowX"></div>
+  <div class="notes"><b>To build it</b><ul>
+    <li>Page 3 switches on <code>user.onboarding_goal_1</code> for stress, sleep and mood. Users who picked focus or gave no answer see the control's page 3.</li>
+    <li>Animations as Lottie files in the editor, or as CSS in a framework rebuild. Each one plays, holds on its final frame, then loops. With Reduce Motion on, each shows the final frame only.</li>
+  </ul></div>
+</section>
+<section id="c">
+  <div class="chead"><span class="tag">C</span><h2>Your program is ready</h2><span class="key">onboarding answers</span></div>
+  <p class="why">By the paywall, people have answered about a dozen onboarding questions and watched Balance build their program, then they get a generic "7 days for free". Concept C cashes in that investment. Page 1 plays three of their own answers back. Page 2 shows the first week of their program, day by day at their reminder time, with the trial reminder placed on the day it lands. Page 3 sells the trial as "start your program". The offer is the control's.</p>
+  <div class="seg">Stress ranked first</div><div class="row" id="cStress"></div>
+  <div class="seg">Sleep ranked first</div><div class="row" id="cSleep"></div>
+  <div class="seg">Mood ranked first</div><div class="row" id="cMood"></div>
+  <div class="seg">Exit offer · same as control</div><div class="row" id="cExit"></div>
+  <div class="notes"><b>To build it</b><ul>
+    <li>The answers on page 1 are examples. Each line needs its onboarding answer sent to Superwall as a user attribute (<code>how_often_feel_stress</code>, <code>source_of_stress</code>, <code>how_long_fall_asleep</code>, <code>keep_awake</code>, <code>has_meditated_before</code> and the mood questions). Coverage of those attributes still needs checking; lines without an answer drop out.</li>
+    <li>The session names and minutes are placeholders. They should match what Balance's program builder gives each goal (the "Program ready" step).</li>
+    <li>The reminder time needs the onboarding reminder answer as an attribute. Without it, page 2 says "one session a day" with no time.</li>
+    <li>Page 2 drops the control's reminder choice: the reminder is fixed at 2 days before the trial ends (day 5) and shown in the week.</li>
+    <li>Focus-first and users without answers see the control. Facebook and Instagram users get the Meta hard paywall (253237) and never see this flow.</li>
+  </ul></div>
+</section>
+
+</div>
+
+<script>
+const phone=(inner,cls='')=>`<div class="phone"><div class="scr ${cls}"><div class="island"></div><div class="status"></div>${inner}</div></div>`;
+const shot=(p,cap)=>`<div class="shot">${p}<div class="cap">${cap}</div></div>`;
+const imgPhone=src=>`<div class="phone"><div class="scr img" style="background-image:url(${src})"></div></div>`;
+const S='fill="none" stroke="#141414" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"';
+
+/* benefit icons, line style with one soft fill */
+const IC={
+ hand:`<svg viewBox="0 0 40 40"><path d="M20 15.5c-2.6-2.4-6-4.6-6-7.6a3.2 3.2 0 0 1 6-1.6 3.2 3.2 0 0 1 6 1.6c0 3-3.4 5.2-6 7.6z" fill="#FADCD8" stroke="#141414" stroke-width="1.2"/><path ${S} d="M4 28.5h6l4.5-2.5h7.5a2 2 0 0 1 0 4h-6M22 30l8-4.6a2 2 0 0 1 2.3 3.2L24 34.5H11.5L8 36"/><path d="M3 27l5 9" stroke="#33C4C9" stroke-width="2.6" stroke-linecap="round"/></svg>`,
+ clock:`<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="12" fill="#fff" stroke="#141414" stroke-width="1.4"/><path d="M20 22V12.6A9.4 9.4 0 0 1 29.4 22z" fill="#84CFD3"/><circle cx="20" cy="22" r="9.4" ${S}/><path ${S} d="M20 16v6h4M10 9.5a4 4 0 0 1 5.5-1.2M30 9.5a4 4 0 0 0-5.5-1.2M12 33l-2 3M28 33l2 3"/></svg>`,
+ plant:`<svg viewBox="0 0 40 40"><path d="M11 24h18l-2.4 12H13.4z" fill="#FCEBDD" stroke="#141414" stroke-width="1.4" stroke-linejoin="round"/><path ${S} d="M20 24V12"/><path d="M20 15c-1-4-4.6-5.4-7.6-4.6.4 3.4 3.6 5.6 7.6 4.6zM20 13c.8-4 4.4-5.6 7.4-5-.2 3.4-3.4 5.8-7.4 5z" fill="#33C4C9" stroke="#141414" stroke-width="1.2"/></svg>`,
+ moon:`<svg viewBox="0 0 40 40"><path d="M25 8a12 12 0 1 0 8 19A10 10 0 0 1 25 8z" fill="#E6E3F4" stroke="#141414" stroke-width="1.4" stroke-linejoin="round"/><path ${S} d="M9 9v4M7 11h4M30 14v3M28.5 15.5h3"/></svg>`,
+ waves:`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#DCEFF0"/><path ${S} d="M11 20v0M15 16v8M19 12v16M23 15v10M27 18v4M31 20v0"/></svg>`,
+ sun:`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="7" fill="#FCEBDD" stroke="#141414" stroke-width="1.4"/><path ${S} d="M20 5v4M20 31v4M5 20h4M31 20h4M9.4 9.4l2.8 2.8M27.8 27.8l2.8 2.8M9.4 30.6l2.8-2.8M27.8 12.2l2.8-2.8"/></svg>`,
+ target:`<svg viewBox="0 0 40 40"><circle cx="18" cy="22" r="12" fill="#fff" stroke="#141414" stroke-width="1.4"/><circle cx="18" cy="22" r="7" ${S}/><circle cx="18" cy="22" r="2.6" fill="#33C4C9"/><path ${S} d="M18 22l14-14M27 8h5v5"/></svg>`,
+};
+
+/* before / after art, 120x56 */
+const ART={
+ rain:`<svg viewBox="0 0 120 56"><g fill="#8B9095"><path d="M10 22a7 7 0 0 1 12-5 8 8 0 0 1 15 2 5 5 0 0 1 1 9H12a5 5 0 0 1-2-6z"/><path d="M62 18a6 6 0 0 1 10-4 7 7 0 0 1 13 2 4.5 4.5 0 0 1 1 8H64a4.5 4.5 0 0 1-2-6z"/></g><g class="drops" stroke="#8B9095" stroke-width="1.1" stroke-linecap="round"><path d="M16 34l-2 5M26 33l-2 5M36 35l-2 5M21 44l-2 5M31 45l-2 5M68 30l-2 5M78 31l-2 5M73 41l-2 5M84 42l-2 5M46 40l-2 5"/></g></svg>`,
+ sun:`<svg viewBox="0 0 132 64"><g class="rays" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M66 6v8M40 18l6 5M92 18l-6 5M28 38h8M96 38h8"/></g><circle class="rise" cx="66" cy="44" r="18" fill="#fff"/><path d="M0 50Q66 28 132 50V64H0z" fill="#84CFD3"/><path d="M0 50Q66 28 132 50" stroke="#fff" stroke-width="2" fill="none"/></svg>`,
+ restless:`<svg viewBox="0 0 120 56"><path d="M58 6a14 14 0 1 0 12 22A12 12 0 0 1 58 6z" fill="#B9BDC1"/><path class="wig" d="M8 44c8-8 14 6 22-2s14 6 22-2 14 6 22-2 14 6 22-2 12 4 16 0" fill="none" stroke="#8B9095" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+ night:`<svg viewBox="0 0 132 64"><path d="M70 8a16 16 0 1 0 14 25A13 13 0 0 1 70 8z" fill="#fff"/><g class="tw" fill="#fff"><circle cx="34" cy="16" r="1.6"/><circle cx="102" cy="12" r="1.8"/><circle cx="110" cy="30" r="1.3"/><circle cx="24" cy="34" r="1.2"/></g><path d="M0 52Q66 34 132 52V64H0z" fill="#84CFD3"/><path d="M0 52Q66 34 132 52" stroke="#fff" stroke-width="2" fill="none"/></svg>`,
+ cloud:`<svg viewBox="0 0 120 56"><path class="drift" d="M30 30a9 9 0 0 1 16-6 10 10 0 0 1 19 3 6 6 0 0 1 1 11H33a6 6 0 0 1-3-8z" fill="#8B9095"/><g class="drops" stroke="#8B9095" stroke-width="1.1" stroke-linecap="round"><path d="M42 44l-1.5 4M54 44l-1.5 4"/></g></svg>`,
+ bright:`<svg viewBox="0 0 132 64"><g class="rays" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M66 4v7M42 14l5 5M90 14l-5 5M30 32h7M95 32h7"/></g><circle class="rise" cx="66" cy="38" r="15" fill="#fff"/><path d="M26 50c3-6 9-6 10 0M98 46c3-6 9-6 10 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M0 50Q66 30 132 50V64H0z" fill="#84CFD3"/><path d="M0 50Q66 30 132 50" stroke="#fff" stroke-width="2" fill="none"/></svg>`,
+ tangle:`<svg viewBox="0 0 120 56"><path d="M8 40c10-30 24 10 30-10s-18-14-8 6 22 14 26-6-16-16-10 4 26 18 30-2-10-16-6 2 18 8 26 2" fill="none" stroke="#8B9095" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+ clear:`<svg viewBox="0 0 132 64"><path d="M14 44C40 44 54 24 92 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 6"/><circle cx="104" cy="24" r="12" fill="none" stroke="#fff" stroke-width="2"/><circle cx="104" cy="24" r="6" fill="none" stroke="#fff" stroke-width="2"/><circle cx="104" cy="24" r="2.2" fill="#fff"/><path d="M0 52Q66 40 132 52V64H0z" fill="#84CFD3"/><path d="M0 52Q66 40 132 52" stroke="#fff" stroke-width="2" fill="none"/></svg>`,
+};
+
+const goals=[
+ {k:'stress',lab:'Daily stress',b:'Feeling overwhelmed',a:'Feeling more at ease',bA:'rain',aA:'sun',h:'<b>Quiet</b> your busy mind, in minutes a day.',ben:[['hand','Explore sessions made just for you'],['clock','Reset after stressful moments'],['plant','Start now, no experience needed']]},
+ {k:'sleep',lab:'Sleep',b:'Mind racing at night',a:'Drifting off with ease',bA:'restless',aA:'night',h:'<b>Fall asleep faster</b>, starting tonight.',ben:[['moon','Wind down with guided breathing'],['waves','Sleep sounds for every night'],['plant','Start now, no experience needed']]},
+ {k:'mood',lab:'Mood',b:'Low and flat',a:'Lighter, more like you',bA:'cloud',aA:'bright',h:'<b>Feel more like yourself</b> again.',ben:[['hand','A daily session that adapts to how you feel'],['sun','Short sessions to lift your day'],['plant','Start now, no experience needed']]},
+];
+const intro=g=>phone(`<div class="body">
+<div class="ba"><div class="bc"><small>Before</small><b>Balance</b><em>${g.lab}</em><strong>${g.b}</strong>${ART[g.bA]}</div>
+<div class="ac"><small>After</small><b>Balance</b><em>${g.lab}</em><strong>${g.a}</strong>${ART[g.aA]}</div></div>
+<div class="introh">${g.h}</div>
+<div class="bens">${g.ben.map(([i,t])=>`<div class="ben">${IC[i]}<span>${t}</span></div>`).join('')}</div>
+<div style="flex:1"></div></div>
+<div class="foot" style="padding-top:12px"><div class="cta soft">Continue for free</div></div>`);
+document.getElementById('aIntro').innerHTML=goals.map(g=>shot(intro(g),`<code>onboarding_goal_1 = ${g.k}</code>`)).join('');
+
+/* A page 3 */
+const bar=(n,rem)=>`<div class="days">${Array.from({length:30},(_,i)=>`<i class="${i===rem?'r':i<n?'f':''}"></i>`).join('')}</div>`;
+const OPT={
+ free:{cta:'Start my free week',pay:'✓&nbsp; No Payment Due Now'},
+ paid:{cta:'Start my 30 days',pay:'$4.99 today · cancel anytime'},
+};
+const design=sel=>phone(`<div class="body" data-group="trial"><div class="x">✕</div>
+<div class="dh">Design your<br><b>trial experience</b></div>
+<div style="flex:1"></div><div class="rev"><i>★★★★★</i><p>"I use it daily and I'm finally sleeping better… Premium is so worth it!"</p><small>Tracy</small></div><div style="flex:1"></div>
+<div class="opts" style="margin-bottom:6px">
+ <button class="opt ${sel==='free'?'on':''}" data-opt="free" aria-pressed="${sel==='free'}"><div class="t"><span class="radio"></span><h4>7 days free</h4></div><p>$0 today, then $69.99/year</p></button>
+ <button class="opt ${sel==='paid'?'on':''}" data-opt="paid" aria-pressed="${sel==='paid'}"><div class="t"><span class="radio"></span><h4>30 days for $4.99</h4></div><p>A full month to build the habit, then $69.99/year</p></button>
+</div>
+</div>
+<div class="foot"><div class="nopay" data-pay>${OPT[sel].pay}</div><div class="cta" data-cta>${OPT[sel].cta}</div></div>`);
+const BELL='<svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 2a4 4 0 0 0-4 4v3l-1.2 2h10.4L12 9V6a4 4 0 0 0-4-4zM6.5 13a1.5 1.5 0 0 0 3 0" fill="#fff"/></svg>';
+const rem2=stat=>phone(`<div class="body"><div class="x">✕</div>
+<div class="rem${stat?' static':''}"><span class="dot d1"></span><span class="dot d2"></span><div class="ph"></div><div class="nt"><span class="bell">${BELL}</span><div><b>Your trial ends in 2 days</b><span>Keep Premium or cancel, it's up to you</span></div></div></div>
+<div class="rq">When should we <b>remind you</b> before your trial ends?</div>
+<div style="margin-top:12px"><div class="bigopt">2 days before<span>Wed, Nov 11</span></div><div class="bigopt">3 days before<span>Tue, Nov 10</span></div></div>
+<div style="flex:1"></div></div>
+<div class="foot"><div class="cta" style="background:#B8BCC0">Continue</div></div>`);
+document.getElementById('aExit').innerHTML=shot(imgPhone('control-p2.png'),'Exit offer · the control screen, unchanged');
+document.getElementById('aRest').innerHTML=
+ shot(rem2(true),'Page 2 · reminder picker, same choice as control; headline restyled to match the other pages')+
+ shot(design('free'),'Page 3 · free week preselected')+
+ shot(design('paid'),'Page 3 · with the 30-day option picked');
+
+/* B */
+const L='<svg viewBox="0 0 12 32" fill="currentColor"><path d="M9 1C4 7 3 19 10 31c.6 1-.8 1-1.2.2C2 20 2 8 8 .5 8.7-.2 9.6.3 9 1z"/><ellipse cx="5" cy="9" rx="1.6" ry="3" transform="rotate(-30 5 9)"/><ellipse cx="4" cy="16" rx="1.6" ry="3" transform="rotate(-10 4 16)"/><ellipse cx="5" cy="23" rx="1.6" ry="3" transform="rotate(15 5 23)"/></svg>';
+const Lr=L.replace('<svg ','<svg style="transform:scaleX(-1)" ');
+const proof=`<div class="proof"><div class="laurel">${L}<div><b>10M+</b><span>happy users</span></div>${Lr}</div><div class="rating"><b>4.9 STAR RATING</b><i>★★★★★</i></div></div>`;
+const bellSvg='<svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 2a4 4 0 0 0-4 4v3l-1.2 2h10.4L12 9V6a4 4 0 0 0-4-4zM6.5 13a1.5 1.5 0 0 0 3 0" fill="#fff"/></svg>';
+const b1=phone(`<div class="body"><div class="x">✕</div>
+<div class="scene"><div class="sky"></div><div class="rain"></div><div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="hill"></div><span class="lbl l1">DAY 1 · OVERWHELMED</span><span class="lbl l2">DAY 7 · AT EASE</span></div>
+<div class="h hd" style="margin-top:18px"><b>Your calmer days</b><br>start this week</div>
+<div class="p" style="margin-top:8px">Personalized meditation in 3–10 minutes a day</div><div style="flex:1"></div></div>
+<div class="foot"><div class="cta">Continue</div></div>`);
+const b2=rem2(false);
+const lock='<svg viewBox="0 0 16 16"><rect x="3.5" y="7" width="9" height="7" rx="1.5" fill="#fff"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0" fill="none" stroke="#fff" stroke-width="1.6"/></svg>';
+const bellO='<svg viewBox="0 0 16 16"><path d="M8 2a4 4 0 0 0-4 4v3l-1.2 2h10.4L12 9V6a4 4 0 0 0-4-4zM6.5 13a1.5 1.5 0 0 0 3 0" fill="#E9A06A"/></svg>';
+const star='<svg viewBox="0 0 16 16"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" fill="#33C4C9"/></svg>';
+const PLAN={yearly:{cta:'Start my free week',pay:'✓&nbsp; No Payment Due Now'},monthly:{cta:'Continue',pay:'$9.99 billed today · cancel anytime'}};
+const b3=phone(`<div class="body" data-group="plan"><div class="x">✕</div>
+<div class="h" style="margin-top:4px"><b>7 days for free</b></div>
+<div class="p" style="margin-top:6px">Here's how your free week works</div>
+<div class="tline"><div class="track"></div><div class="fill"></div>
+<span class="node n1">${lock}</span><span class="node n2">${bellO}</span><span class="node n3">${star}</span>
+<span class="nl l1"><b>Today</b>Full access</span><span class="nl l2"><b>Day 5</b>We remind you</span><span class="nl l3"><b>Day 7</b>Trial ends</span></div>
+<button class="plan on" data-opt="yearly" aria-pressed="true"><div class="bar">BEST VALUE · SAVE 41%</div><div class="in"><div><h4>Yearly</h4><p>7 days free, then $69.99/year</p></div><div class="pr">$5.75<small>/mo</small></div></div></button>
+<button class="plan sm" data-opt="monthly" aria-pressed="false"><div class="in"><div><h4>Monthly</h4><p>Billed monthly</p></div><div class="pr">$9.99<small>/mo</small></div></div></button>
+<div style="flex:1"></div></div>
+<div class="foot"><div class="nopay" data-pay>${PLAN.yearly.pay}</div><div class="cta" data-cta>${PLAN.yearly.cta}</div></div>`);
+
+const P3=[
+ {k:'stress',sc:'day',lbl:'DAY 7 · AT EASE',h:'<b>Calm</b> your<br>busy mind',r:['"It\'s helped me calm down during panic attacks or when I\'m overwhelmed."','Steffanosaur'],cap:'the sun breathes in and out'},
+ {k:'sleep',sc:'night',lbl:'TONIGHT · DRIFTING OFF',h:'<b>Sleep better</b>,<br>starting tonight',r:['"I love the sleep singles, it takes me hours to fall asleep normally… The sleep singles helped."','Srinijad'],cap:'the moon rises and stars twinkle'},
+ {k:'mood',sc:'glow',lbl:'DAY 7 · LIGHTER',h:'<b>Feel lighter</b>,<br>day by day',r:['"It helped improve my sleep, mood, way of thinking, memory."','Danixx210'],cap:'the sun\'s rays turn and small hearts float up'},
+];
+const scene3=g=>{
+ const top=`<div class="x">✕</div><div class="sh">${g.h}</div><div class="rev hrev"><i>★★★★★</i><p>${g.r[0]}</p><small>${g.r[1]}</small></div>`;
+ if(g.sc==='night') return `<div class="scene calm p3hero night3">${top}<span class="st s1"></span><span class="st s2"></span><span class="st s3"></span><span class="st s4"></span><div class="moon"></div><div class="hill"></div></div>`;
+ if(g.sc==='glow') return `<div class="scene calm p3hero glow3">${top}<div class="rays3"></div><div class="sun"></div><span class="ht h1">♥</span><span class="ht h2">♥</span><span class="ht h3">♥</span><div class="hill"></div></div>`;
+ return `<div class="scene calm p3hero">${top}<div class="sun"></div><div class="hill"></div></div>`;
+};
+const b3g=g=>phone(`${scene3(g)}<div class="body"><div style="flex:1"></div></div>
+<div class="foot"><div class="vp" style="margin:0 0 10px">7 days free, then $5.75 / month<br>($69.99 billed yearly after trial)</div><div class="cta">Start your FREE week</div><div class="link">View all plans</div></div>`,g.sc==='night'?'sleepbg':'');
+document.getElementById('bRow3').innerHTML=
+ P3.map(g=>shot(b3g(g),`<code>onboarding_goal_1 = ${g.k}</code> · ${g.cap}`)).join('');
+const bx=phone(`<div class="scene calm p3hero xo2"><div class="x">✕</div><div class="sh">Before you go</div>
+<div class="xo2-sun"></div><div class="hill"></div>
+<div class="xo2-stack"><span class="xo2-pill">71% OFF · FOREVER</span><span class="xo2-old">$121.55</span><span class="xo2-new">$34.99<small> / year</small></span></div></div>
+<div class="body"><div style="flex:1"></div></div>
+<div class="foot"><div class="xo2-note">This offer won't be there once you close it</div>
+<div class="xo-plan"><div class="bar">LOWEST PRICE EVER</div><div class="in"><div><h4>Yearly</h4><p>12 months · $34.99</p></div><div class="pr">$2.88/mo</div></div></div>
+<div class="cta" style="margin-top:12px">Claim your one-time offer</div></div>`);
+document.getElementById('bRow').innerHTML=
+ shot(b1,'Page 1 · rain clears and the sun rises; the label goes from Day 1 to Day 7')+
+ shot(b2,'Page 2 · same choice as control, nothing preselected; the reminder drops in and rings');
+document.getElementById('bRowX').innerHTML=shot(bx,'Exit offer · same offer as control. The old price fades in and is slowly struck through, then $34.99 rises in and the 71% off pill appears');
+
+/* C · your plan is ready */
+const CG=[
+ {k:'stress',row:'cStress',goal:'Less stress',time:'8:00 am',ans:[['clock','You feel stressed <b>most days</b>'],['hand','<b>Work</b> is your biggest source of stress'],['plant','You\'re <b>new to meditation</b>']],
+  week:[['Foundations · Session 1',5],['Foundations · Session 2',5],['Breathing single · Relax',3],['Foundations · Session 3',6],['Foundations · Session 4',6],['Daily meditation',7],['Foundations · Session 5',7]],
+  rev:['"It\'s helped me calm down during panic attacks or when I\'m overwhelmed."','Steffanosaur']},
+ {k:'sleep',row:'cSleep',goal:'Better sleep',time:'10:00 pm',ans:[['moon','It takes you <b>30+ minutes</b> to fall asleep'],['waves','<b>Racing thoughts</b> keep you awake'],['clock','You want to be asleep by <b>10:30 pm</b>']],
+  week:[['Wind Down',8],['Sleep single · Drift off',10],['Wind Down',8],['Sleep sounds · Rain',10],['Awake in the night',6],['Wind Down',8],['Sleep single · Let go',10]],
+  rev:['"I love the sleep singles, it takes me hours to fall asleep normally… The sleep singles helped."','Srinijad']},
+ {k:'mood',row:'cMood',goal:'A better mood',time:'8:30 am',ans:[['sun','You feel <b>low some days</b>'],['hand','You\'re happiest <b>around friends</b>'],['plant','You\'ve <b>meditated a little</b> before']],
+  week:[['Daily meditation',5],['Morning Brew',4],['Daily meditation',6],['Breathing single · Energize',3],['Daily meditation',6],['Morning Brew',4],['Daily meditation',7]],
+  rev:['"It helped improve my sleep, mood, way of thinking, memory."','Danixx210']},
+];
+const cP1=g=>phone(`<div class="body"><div class="x">✕</div>
+<div class="dh" style="margin-top:12px"><b>Thanks for sharing</b><br>what you need</div>
+<div style="flex:.5"></div><div class="c-ans">${g.ans.map(([i,t],n)=>`<div class="c-a" style="animation-delay:${.3+n*.45}s">${IC[i]}<span>${t}</span></div>`).join('')}</div>
+<div class="c-built" style="animation-delay:1.8s"><span class="c-ok">✓</span>We built your program around it</div>
+<div style="flex:1"></div></div>
+<div class="foot"><div class="cta">See my program</div></div>`);
+const DI={leaf:'<svg viewBox="0 0 20 20"><path d="M5 15c0-6 4-10 10-10 0 6-4 10-10 10zM5 15l5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+ wind:'<svg viewBox="0 0 20 20"><path d="M3 8h9a2.5 2.5 0 1 0-2.5-2.5M3 12h12a2.5 2.5 0 1 1-2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+ moon:'<svg viewBox="0 0 20 20"><path d="M13 3.5a7 7 0 1 0 3.5 11A6 6 0 0 1 13 3.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+ waves:'<svg viewBox="0 0 20 20"><path d="M4 8v4M7.5 5v10M11 7v6M14.5 9v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+ sun:'<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>'};
+const dIcon=t=>/Breath/.test(t)?'wind':/sounds/.test(t)?'waves':/Wind Down|Sleep|Awake/.test(t)?'moon':/Morning/.test(t)?'sun':'leaf';
+const cP2=g=>phone(`<div class="body"><div class="x">✕</div>
+<div class="dh" style="margin-top:12px">Your <b>first week</b></div>
+<div class="p" style="margin-top:6px">One session a day at ${g.time}</div>
+<div class="c-week">${g.week.map(([t,m],i)=>`<div class="c-day${i===0?' now':''}${i===4?' remday':''}${i===6?' last':''}"><span class="c-ic">${DI[dIcon(t)]}</span><div><small>${i===0?'Today':'Day '+(i+1)}</small><b>${t}</b>${i===4?'<em class="c-note">🔔 Reminder: trial ends in 2 days</em>':''}${i===6?'<em class="c-note end">Trial ends · program continues</em>':''}</div><i>${m} min</i></div>`).join('')}</div>
+<div style="flex:1"></div></div>
+<div class="foot"><div class="cta">Continue</div></div>`);
+const cP3=g=>phone(`<div class="body"><div class="x">✕</div>
+<div class="dh" style="margin-top:12px"><b>Your program</b>,<br>free for 7 days</div>
+<div class="c-plan"><div class="c-ring"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#fff" stroke-width="6"/><circle class="c-arc" cx="32" cy="32" r="27" fill="none" stroke="#0E6D78" stroke-width="6" stroke-linecap="round" stroke-dasharray="170" stroke-dashoffset="146" transform="rotate(-90 32 32)"/></svg><b>1/7</b></div>
+<div><small>YOUR PROGRAM</small><h4>${g.goal}</h4><p>7 sessions · 3–10 min · daily at ${g.time}</p><p class="c-ready">Day 1 is ready</p></div></div>
+<div style="flex:1"></div>
+<div class="rev" style="padding:14px"><i>★★★★★</i><p style="font-size:11px">${g.rev[0]}</p><small>${g.rev[1]}</small></div>
+<div style="flex:1"></div></div>
+<div class="foot"><div class="vp" style="margin:0 0 10px">7 days free, then $5.75 / month<br>($69.99 billed yearly after trial)</div><div class="cta">Start my program</div><div class="link">View all plans</div></div>`);
+CG.forEach(g=>{document.getElementById(g.row).innerHTML=
+ shot(cP1(g),'Page 1 · three of their own onboarding answers (examples), then "we built your program around it"')+
+ shot(cP2(g),'Page 2 · their first week at their reminder time, with the trial reminder on day 5')+
+ shot(cP3(g),'Page 3 · "Start your program", the program card fills to day 1, plus a review for the same goal');});
+document.getElementById('cExit').innerHTML=shot(imgPhone('control-p2.png'),'Exit offer · the control screen, unchanged');
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-rem]'); if(!b) return;
+ const box=b.closest('[data-cweek]'), scr=b.closest('.scr');
+ box.querySelectorAll('[data-rem]').forEach(x=>x.classList.toggle('on',x===b));
+ const d=+b.dataset.rem, row=box.querySelector('[data-remrow]');
+ row.hidden=false; row.style.order=d*2+1;
+ box.querySelector('[data-remtxt]').textContent=`Day ${d} · We'll remind you your trial ends in ${7-d} days`;
+ scr.querySelector('[data-remcta]').style.background='';
+});
+
+/* tap to select */
+const COPY={free:OPT.free,paid:OPT.paid,yearly:PLAN.yearly,monthly:PLAN.monthly};
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-opt]'); if(!b) return;
+ const scr=b.closest('.scr');
+ scr.querySelectorAll('[data-opt]').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b)});
+ const c=COPY[b.dataset.opt]; scr.querySelector('[data-cta]').textContent=c.cta; scr.querySelector('[data-pay]').innerHTML=c.pay;
+});
+</script>
